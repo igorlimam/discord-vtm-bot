@@ -1,2 +1,7 @@
-# discord-vtm-bot
-bot to help storytellers who run campaings on discord: [Source](https://github.com/discord/discord-example-app)
+# LEIAMEMUCHO
+
+Based on [Discord example app](https://github.com/discord/discord-example-app)
+
+# List of commands
+
+TODOzao
