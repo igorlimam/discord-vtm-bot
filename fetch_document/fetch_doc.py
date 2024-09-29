@@ -7,10 +7,11 @@ import ahocorasick_rs
 
 from titlecase import titlecase
 
-def write_json(discipline, power_description):
+def write_json(discipline, power, power_description):
     power_description['Discipline'] = titlecase(discipline)
+    power_description['Power'] = titlecase(power)
     with open('getPower.json', 'w') as fp:
-        json.dump(power_description, fp)
+        json.dump(power_description, fp, ensure_ascii=False)
 
 def get_stripped_text(content, start):
     text = content[start::]
@@ -72,7 +73,7 @@ with open(output_doc) as doc:
         slc = slice(l, r)
         if content[slc] == anchor_string:
             starting_index = finish
-            write_json(discipline, aho_power(starting_index))
+            write_json(discipline, power, aho_power(starting_index))
 
 
 # Para disciplina: Você estará no nome correto se logo em seguida tiver um "Back do contents". Você pode fazer um ponteiro duplo.

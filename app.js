@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import axios from 'axios';
 import express, { response } from 'express';
 import {
   InteractionType,
@@ -9,7 +10,7 @@ import {
   InteractionResponseFlags,
 } from 'discord-interactions';
 import { VerifyDiscordRequest, getRandomEmoji, DiscordRequest, functionGTPRequest } from './utils.js';
-import { getShuffledOptions, getResult } from './game.js';
+import { getPowerDisciplineDescription } from './disciplineCommand.js'
 
 // Create an express app
 const app = express();
@@ -26,7 +27,7 @@ const activeGames = {};
  */
 app.post('/interactions', async function (req, res) {
   // Interaction type and data
-  const { type, id, data } = req.body;
+  const { type, id, data, token } = req.body;
 
   /**
    * Handle verification requests
@@ -110,8 +111,6 @@ app.post('/interactions', async function (req, res) {
    */
   if (type === InteractionType.APPLICATION_COMMAND) {
     const { name } = data;
-    console.log(data);
-
     if (name === 'ping') {
       return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
@@ -161,12 +160,33 @@ app.post('/interactions', async function (req, res) {
     }
 
     if(name === 'discipline'){
-      return res.send({
-        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-        data: {
-          content: "Ola"
-        }
+      console.log(data)
+      let inputObject = data.options[0]
+      let discipline = inputObject.name
+      let power = inputObject.options[0].name;
+      console.log(discipline)
+      console.log(power)
+      res.send({
+        type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE
       });
+      let response = "";
+      try{
+        response = await getPowerDisciplineDescription(discipline, power);
+      }catch(e){
+        response = e;
+      }
+      console.log(response)
+      try {
+        const webhookUrl = `https://discord.com/api/v10/webhooks/${process.env.APP_ID}/${token}`;
+
+        await axios.post(webhookUrl, {
+            content: "Request processed successfully!"
+        });
+
+        console.log('Follow-up message sent.');
+    } catch (followUpError) {
+        console.error('Failed to send follow-up:', followUpError);
+    }
     }
 
   }

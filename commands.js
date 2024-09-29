@@ -82,8 +82,8 @@ const INFO_DISCIPLINE_COMMAND = {
       description: "Animalism description",
       options: [
         {
-          name: "fata-morgana",
-          description: "Fata morgana",
+          name: "sense-the-beast",
+          description: "Sense the Beast",
           type: 1 //command
         }
       ]
